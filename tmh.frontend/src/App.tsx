@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import TasksContainer from "./state/containers/TasksContainer";
-import TaskList from "./components/taskList/TaskList";
+import RootTaskList from "./components/taskList/RootTaskList";
 import { CssBaseline } from "@material-ui/core";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
         <div className="App">
             <CssBaseline />
             <TasksContainer.Provider>
-                <TaskList />
+                <RootTaskList />
             </TasksContainer.Provider>
         </div>
     );

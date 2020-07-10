@@ -7,6 +7,6 @@ export interface ITask {
     order: number;
     // resources
     // location
-    children: number[];
+    parentUuid?: string;
     complete: boolean;
 }
