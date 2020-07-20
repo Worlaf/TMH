@@ -20,7 +20,7 @@ function useTasks() {
             order: (_(tasks).maxBy((t) => t.order)?.order || 0) + 1,
             complete: false,
             ...task,
-            uuid: uuid.v4(),
+            id: uuid.v4(),
         };
 
         setTasks([...tasks, newTask]);
@@ -29,14 +29,14 @@ function useTasks() {
     };
 
     const updateTask = (task: ITask) => {
-        setTasks([...tasks.filter((t) => t.uuid !== task.uuid), task]);
+        setTasks([...tasks.filter((t) => t.id !== task.id), task]);
     };
 
     const deleteTask = (id: string) => {
-        setTasks([...tasks.filter((t) => t.uuid !== id)]);
+        setTasks([...tasks.filter((t) => t.id !== id)]);
     };
 
-    const getTask = (id: string) => tasks.find((t) => t.uuid === id);
+    const getTask = (id: string) => tasks.find((t) => t.id === id);
 
     return { tasks, createTask, updateTask, deleteTask, getTask };
 }

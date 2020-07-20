@@ -1,5 +1,5 @@
 export interface ITask {
-    uuid: string;
+    id: string;
     title: string;
     duration: number | null;
     difficulty: number | null;
@@ -7,6 +7,6 @@ export interface ITask {
     order: number;
     // resources
     // location
-    parentUuid?: string;
+    parentId?: string;
     complete: boolean;
 }

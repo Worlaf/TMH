@@ -22,7 +22,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
     const classes = useStyles();
     const orderedTaskIds = _(props.tasks)
         .orderBy((t) => t.order)
-        .map((t) => t.uuid)
+        .map((t) => t.id)
         .value();
 
     return (

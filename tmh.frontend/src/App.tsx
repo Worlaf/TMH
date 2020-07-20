@@ -17,6 +17,9 @@ function App() {
                         <Route path={routes.root.template} exact>
                             <TaskListPage />
                         </Route>
+                        <Route path={routes.root.tasks.template} exact>
+                            <TaskListPage />
+                        </Route>
                         <Route path={routes.root.tasks.edit.template} exact>
                             <EditTaskPage />
                         </Route>

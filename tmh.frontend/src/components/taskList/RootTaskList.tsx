@@ -19,9 +19,9 @@ const RootTaskList: React.FC = () => {
     return (
         <Container>
             <Container className={styles.taskListSeparator}>Актуальные задачи:</Container>
-            <TaskList tasks={tasks.filter((t) => t.parentUuid === undefined && !t.complete)} allowAdding={true} />
+            <TaskList tasks={tasks.filter((t) => t.parentId === undefined && !t.complete)} allowAdding={true} />
             <Container className={styles.taskListSeparator}>Закрытые:</Container>
-            <TaskList tasks={tasks.filter((t) => t.parentUuid === undefined && t.complete)} allowAdding={false} />
+            <TaskList tasks={tasks.filter((t) => t.parentId === undefined && t.complete)} allowAdding={false} />
         </Container>
     );
 };

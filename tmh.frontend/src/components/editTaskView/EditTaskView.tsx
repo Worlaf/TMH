@@ -9,7 +9,7 @@ interface IEditTaskViewProps {
 
 const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
     const { tasks, updateTask } = TasksContainer.useContainer();
-    const task = tasks.find((t) => t.uuid === props.taskId);
+    const task = tasks.find((t) => t.id === props.taskId);
 
     if (task)
         return (

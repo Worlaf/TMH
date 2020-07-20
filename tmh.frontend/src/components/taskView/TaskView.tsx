@@ -34,17 +34,17 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
     const { tasks, createTask, updateTask, deleteTask } = TasksContainer.useContainer();
     const [showControls, setShowControls] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const task = tasks.find((t) => t.uuid === props.taskId) ?? ({ title: "" } as ITask);
+    const task = tasks.find((t) => t.id === props.taskId) ?? ({ title: "" } as ITask);
 
     const saveTask = (title: string) => {
         task.title = title;
 
-        if (task.uuid) updateTask(task);
+        if (task.id) updateTask(task);
         else createTask(task);
     };
 
     const resolveIcon = () => {
-        if (!task.uuid) {
+        if (!task.id) {
             return (
                 <IconButton disabled>
                     <AddIcon />
@@ -70,7 +70,7 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
     return (
         <Container className={styles.taskContainer}>
             <TextField
-                placeholder={task.uuid === undefined ? "Новая задача" : undefined}
+                placeholder={task.id === undefined ? "Новая задача" : undefined}
                 value={task.title}
                 inputRef={inputRef}
                 onChange={(event) => {
@@ -82,14 +82,14 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                     onBlur: () => setShowControls(false),
                     startAdornment: resolveIcon(),
                     endAdornment:
-                        task.uuid !== undefined ? (
+                        task.id !== undefined ? (
                             <InputAdornment position="end" className={showControls ? undefined : styles.hidden}>
-                                <Link to={routes.root.tasks.edit.build({ taskId: task.uuid })}>
+                                <Link to={routes.root.tasks.edit.build({ taskId: task.id })}>
                                     <IconButton>
                                         <EditIcon />
                                     </IconButton>
                                 </Link>
-                                <IconButton onClick={() => deleteTask(task.uuid)}>
+                                <IconButton onClick={() => deleteTask(task.id)}>
                                     <ClearIcon />
                                 </IconButton>
                             </InputAdornment>
