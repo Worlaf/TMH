@@ -1,77 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import TasksContainer from "../../state/containers/TasksContainer";
-import { Container, Button, Box, makeStyles } from "@material-ui/core";
-import _ from "lodash";
-import EditTaskDialog from "./EditTaskDialog";
-import { ITask } from "../../state/data/task";
 import TaskList from "./TaskList";
+import { Container, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-    taskList: {
-        "&>div": {
-            marginBottom: theme.spacing(1),
-        },
+    taskListSeparator: {
+        marginTop: theme.spacing(2),
+        borderBottomWidth: "1px",
+        borderBottomColor: theme.palette.grey[500],
+        borderBottomStyle: "dotted",
     },
 }));
 
-// todo: create context to share task editing and adding subtasks
-
 const RootTaskList: React.FC = () => {
-    const { tasks, createTask, updateTask } = TasksContainer.useContainer();
-    const [newTask, setNewTask] = useState<ITask>();
-    const [taskInEditModeId, setTaskInEditModeId] = useState<string>();
-    const classes = useStyles();
-
-    const hasEmptyTask = newTask !== undefined;
+    const { tasks } = TasksContainer.useContainer();
+    const styles = useStyles();
 
     return (
-        <Container className={classes.taskList}>
-            <Box>
-                <Button
-                    disabled={newTask !== undefined}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                        setNewTask({ title: "", description: "", uuid: "", order: tasks.length, duration: null, difficulty: null, complete: false, parentUuid: undefined });
-                        // setExpandedTaskId(undefined);
-                        setTaskInEditModeId(undefined);
-                    }}
-                >
-                    Добавить задачу
-                </Button>
-            </Box>
-            <EditTaskDialog
-                isOpen={newTask !== undefined || taskInEditModeId !== undefined}
-                onClose={() => {
-                    if (newTask !== undefined) {
-                        setNewTask(undefined);
-                    } else {
-                        setTaskInEditModeId(undefined);
-                    }
-                }}
-                onSave={(task) => {
-                    if (newTask !== undefined) {
-                        createTask(task);
-                        setNewTask(undefined);
-                    } else {
-                        updateTask(task);
-                        setTaskInEditModeId(undefined);
-                    }
-                }}
-                task={(taskInEditModeId !== undefined && tasks.find((t) => t.uuid === taskInEditModeId)) || newTask!}
-            />
-            <TaskList
-                tasks={_(tasks)
-                    .filter((t) => t.parentUuid === undefined)
-                    .value()}
-                onAddChildTask={(parent) => {
-                    if (!hasEmptyTask) setNewTask({ title: "", description: "", uuid: "", order: tasks.length, duration: null, difficulty: null, complete: false, parentUuid: parent.uuid });
-                }}
-                onCompleteStateChanged={(task, complete) => updateTask({ ...task, complete: complete })}
-                onEditTask={(task) => {
-                    if (!hasEmptyTask) setTaskInEditModeId(task.uuid);
-                }}
-            />
+        <Container>
+            <Container className={styles.taskListSeparator}>Актуальные задачи:</Container>
+            <TaskList tasks={tasks.filter((t) => t.parentUuid === undefined && !t.complete)} allowAdding={true} />
+            <Container className={styles.taskListSeparator}>Закрытые:</Container>
+            <TaskList tasks={tasks.filter((t) => t.parentUuid === undefined && t.complete)} allowAdding={false} />
         </Container>
     );
 };

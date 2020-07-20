@@ -29,11 +29,14 @@ function useTasks() {
     };
 
     const updateTask = (task: ITask) => {
-        console.log(task);
         setTasks([...tasks.filter((t) => t.uuid !== task.uuid), task]);
     };
 
-    return { tasks, createTask, updateTask };
+    const deleteTask = (id: string) => {
+        setTasks([...tasks.filter((t) => t.uuid !== id)]);
+    };
+
+    return { tasks, createTask, updateTask, deleteTask };
 }
 
 const TasksContainer = createContainer(useTasks);
