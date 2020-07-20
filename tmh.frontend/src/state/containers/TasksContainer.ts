@@ -36,7 +36,9 @@ function useTasks() {
         setTasks([...tasks.filter((t) => t.uuid !== id)]);
     };
 
-    return { tasks, createTask, updateTask, deleteTask };
+    const getTask = (id: string) => tasks.find((t) => t.uuid === id);
+
+    return { tasks, createTask, updateTask, deleteTask, getTask };
 }
 
 const TasksContainer = createContainer(useTasks);

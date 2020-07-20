@@ -14,10 +14,10 @@ function App() {
             <BrowserRouter>
                 <TasksContainer.Provider>
                     <Switch>
-                        <Route path={routes.home.template} exact>
+                        <Route path={routes.root.template} exact>
                             <TaskListPage />
                         </Route>
-                        <Route path={routes.editTask.template} exact>
+                        <Route path={routes.root.tasks.edit.template} exact>
                             <EditTaskPage />
                         </Route>
                     </Switch>

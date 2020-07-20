@@ -84,7 +84,7 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                     endAdornment:
                         task.uuid !== undefined ? (
                             <InputAdornment position="end" className={showControls ? undefined : styles.hidden}>
-                                <Link to={routes.editTask.build({ id: task.uuid })}>
+                                <Link to={routes.root.tasks.edit.build({ taskId: task.uuid })}>
                                     <IconButton>
                                         <EditIcon />
                                     </IconButton>
