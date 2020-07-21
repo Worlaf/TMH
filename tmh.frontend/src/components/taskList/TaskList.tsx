@@ -41,8 +41,6 @@ const TaskList: React.FC<TaskListProps> = (props) => {
                         />
                     ))
                     .value()}
-
-                {/* <TaskView key={orderedTaskIds.length} isExpanded={false} onToggleExpandedState={() => {}} /> */}
             </Box>
         </Container>
     );

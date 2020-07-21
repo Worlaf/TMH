@@ -14,6 +14,7 @@ function useTasks() {
 
     const createTask = (task: Partial<ITask> & { title: string }) => {
         const newTask: ITask = {
+            priority: 0,
             difficulty: null,
             duration: null,
             description: null,
