@@ -13,8 +13,8 @@ const TaskPriorityEditor: React.FC<ITaskPriorityEditorProps> = (props) => {
     return (
         <PropertyEditorLayout label="Приоритет">
             <ButtonGroup>
-                {priorities.map((p) => (
-                    <Button variant={p === props.priority ? "contained" : "outlined"} color="primary" disableElevation onClick={() => props.onChange(p)}>
+                {priorities.map((p, i) => (
+                    <Button key={i} variant={p === props.priority ? "contained" : "outlined"} color="primary" disableElevation onClick={() => props.onChange(p)}>
                         {getPriorityLabel(p)}
                     </Button>
                 ))}
