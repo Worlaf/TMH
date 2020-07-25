@@ -1,12 +1,8 @@
 import React from "react";
 import PropertyEditorLayout from "./PropertyEditorLayout";
 import MdEditor from "react-markdown-editor-lite";
-import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
-
-const mdParser = new MarkdownIt({
-    linkify: true,
-});
+import markdownParser from "../../utils/markdownParser";
 
 interface ITaskDescriptionEditorProps {
     description: string | null;
@@ -16,7 +12,7 @@ interface ITaskDescriptionEditorProps {
 const TaskDescriptionEditor: React.FC<ITaskDescriptionEditorProps> = (props) => {
     return (
         <PropertyEditorLayout label="Описание">
-            <MdEditor style={{ height: "500px" }} value={props.description ?? ""} renderHTML={(md) => mdParser.render(md)} onChange={(e) => props.onChange(e.text)} />
+            <MdEditor style={{ height: "500px" }} value={props.description ?? ""} renderHTML={(md) => markdownParser.render(md)} onChange={(e) => props.onChange(e.text)} />
         </PropertyEditorLayout>
     );
 };

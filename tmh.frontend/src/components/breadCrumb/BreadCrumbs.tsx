@@ -24,7 +24,7 @@ const BreadCrumbs: React.FC<IBreadCrumbProps> = (props) => {
             {routePath.map((route, index) => {
                 var customBreadCrumb = props.customRouteBreadCrumbs && props.customRouteBreadCrumbs[route.key];
                 if (customBreadCrumb !== undefined) {
-                    return customBreadCrumb;
+                    return customBreadCrumb; // todo: use render func and pass key
                 } else {
                     return (
                         <LinkRouter key={index} to={route.build(props.routeData || {})}>

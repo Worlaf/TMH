@@ -1,3 +1,5 @@
+import { colors } from "@material-ui/core";
+
 export type Priority = -2 | -1 | 0 | 1 | 2;
 
 export interface ITask {
@@ -26,5 +28,20 @@ export function getPriorityLabel(priority: Priority) {
             return "Низкий";
         case -2:
             return "Минимальный";
+    }
+}
+
+export function getPriorityColor(priority: Priority) {
+    switch (priority) {
+        case 2:
+            return colors.red["A700"];
+        case 1:
+            return colors.orange["A700"];
+        case 0:
+            return colors.green["A700"];
+        case -1:
+            return colors.blue["A200"];
+        case -2:
+            return colors.blue["100"];
     }
 }

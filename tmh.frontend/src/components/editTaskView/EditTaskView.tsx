@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TasksContainer from "../../state/containers/TasksContainer";
-import { Container, Typography } from "@material-ui/core";
+import { Container, Typography, TextField } from "@material-ui/core";
 import TaskDifficultyEditor from "./TaskDifficultyEditor";
 import TaskPriorityEditor from "./TaskPriorityEditor";
 import TaskDurationEditor from "./TaskDurationEditor";
@@ -17,7 +17,7 @@ const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
     if (task)
         return (
             <Container>
-                <Typography variant="h1">{task.title}</Typography>
+                <TextField fullWidth size="medium" value={task.title} onChange={(event) => updateTask({ ...task, title: event.target.value })} />
                 <TaskDifficultyEditor difficulty={task.difficulty} onChange={(value) => updateTask({ ...task, difficulty: value })} />
                 <TaskPriorityEditor priority={task.priority} onChange={(value) => updateTask({ ...task, priority: value })} />
                 <TaskDurationEditor duration={task.duration} onChange={(value) => updateTask({ ...task, duration: value })} />

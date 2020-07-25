@@ -2,6 +2,7 @@ import React from "react";
 import { Priority, getPriorityLabel } from "../../state/data/task";
 import PropertyEditorLayout from "./PropertyEditorLayout";
 import { ButtonGroup, Button } from "@material-ui/core";
+import PriorityIcon from "../priorityIcon";
 
 interface ITaskPriorityEditorProps {
     priority: Priority;
@@ -15,7 +16,7 @@ const TaskPriorityEditor: React.FC<ITaskPriorityEditorProps> = (props) => {
             <ButtonGroup>
                 {priorities.map((p, i) => (
                     <Button key={i} variant={p === props.priority ? "contained" : "outlined"} color="primary" disableElevation onClick={() => props.onChange(p)}>
-                        {getPriorityLabel(p)}
+                        <PriorityIcon priority={p} />
                     </Button>
                 ))}
             </ButtonGroup>

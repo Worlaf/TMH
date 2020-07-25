@@ -6,6 +6,7 @@ import { ITask } from "../../state/data/task";
 
 const useStyles = makeStyles((theme) => ({
     taskList: {
+        padding: "0",
         "&>div": {
             marginBottom: theme.spacing(1),
         },

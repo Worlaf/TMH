@@ -1,5 +1,11 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
+
+const useStyles = makeStyles(() => ({
+    container: {
+        marginTop: "1em",
+    },
+}));
 
 interface IPropertyEditorLayoutProps {
     label: string;
@@ -7,9 +13,11 @@ interface IPropertyEditorLayoutProps {
 }
 
 const PropertyEditorLayout: React.FC<IPropertyEditorLayoutProps> = (props) => {
+    const classes = useStyles();
+
     return (
-        <Box>
-            <Box>{props.label}</Box>
+        <Box className={classes.container}>
+            <Typography variant="h6">{props.label}</Typography>
             <Box>{props.children}</Box>
         </Box>
     );

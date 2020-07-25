@@ -11,7 +11,7 @@ interface ITaskDifficultyEditorProps {
 const TaskDifficultyEditor: React.FC<ITaskDifficultyEditorProps> = (props) => {
     return (
         <PropertyEditorLayout label="Сложность">
-            <Rating name="taskDifficulty" icon={<EmojiObjectsIcon />} value={props.difficulty} onChange={(_, value) => props.onChange(value)} />
+            <Rating size="large" name="taskDifficulty" icon={<EmojiObjectsIcon fontSize="large" />} value={props.difficulty} onChange={(_, value) => props.onChange(value)} />
         </PropertyEditorLayout>
     );
 };
