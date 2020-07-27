@@ -1,5 +1,5 @@
 import React from "react";
-import { Priority, getPriorityLabel } from "../../state/data/task";
+import { Priority } from "../../state/data/task";
 import PropertyEditorLayout from "./PropertyEditorLayout";
 import { ButtonGroup, Button } from "@material-ui/core";
 import PriorityIcon from "../priorityIcon";

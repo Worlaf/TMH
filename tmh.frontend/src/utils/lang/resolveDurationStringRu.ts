@@ -1,8 +1,8 @@
 import { resolveCountableRu } from "./resolveCountableRu";
+import { decomposeDuration } from "../time";
 
-export function resolveDurationRu(durationInMinutes: number) {
-    const hours = Math.floor(durationInMinutes / 60);
-    const minutes = durationInMinutes % 60;
+export function resolveDurationStringRu(durationInMinutes: number) {
+    const { hours, minutes } = decomposeDuration(durationInMinutes);
 
     const minuteString = `${minutes} ${resolveMinuteCountableRu(minutes)}`;
 

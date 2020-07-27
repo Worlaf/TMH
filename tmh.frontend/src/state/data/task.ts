@@ -9,7 +9,7 @@ export interface ITask {
     difficulty: number | null;
     priority: Priority;
     description: string | null;
-    order: number;
+    index: number;
     // resources
     // location
     parentId?: string;

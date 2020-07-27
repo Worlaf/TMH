@@ -12,7 +12,7 @@ interface ITaskDescriptionEditorProps {
 const TaskDescriptionEditor: React.FC<ITaskDescriptionEditorProps> = (props) => {
     return (
         <PropertyEditorLayout label="Описание">
-            <MdEditor style={{ height: "500px" }} value={props.description ?? ""} renderHTML={(md) => markdownParser.render(md)} onChange={(e) => props.onChange(e.text)} />
+            <MdEditor style={{ height: "300px" }} value={props.description ?? ""} renderHTML={(md) => markdownParser.render(md)} onChange={(e) => props.onChange(e.text)} />
         </PropertyEditorLayout>
     );
 };

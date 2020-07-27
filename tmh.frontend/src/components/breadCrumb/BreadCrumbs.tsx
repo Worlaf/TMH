@@ -8,23 +8,25 @@ interface LinkRouterProps extends LinkProps {
     replace?: boolean;
 }
 
-const LinkRouter = (props: LinkRouterProps) => <Link {...props} component={RouterLink as any} />;
+export const LinkRouter = (props: LinkRouterProps) => <Link {...props} component={RouterLink as any} />;
 
 interface IBreadCrumbProps {
     route: IRoute;
-    customRouteBreadCrumbs?: { [key: string]: React.ReactNode };
+    routePathProvider?: (originalPath: IRoute[]) => IRoute[];
+    customBreadCrumbProvider?: (route: IRoute, collectionKey: number) => React.ReactNode;
     routeData?: { [key: string]: string };
 }
 
 const BreadCrumbs: React.FC<IBreadCrumbProps> = (props) => {
     const routePath = resolveRoutePath(props.route);
+    const finalRoutePath = props.routePathProvider ? props.routePathProvider(routePath) : routePath;
 
     return (
         <Breadcrumbs>
-            {routePath.map((route, index) => {
-                var customBreadCrumb = props.customRouteBreadCrumbs && props.customRouteBreadCrumbs[route.key];
+            {finalRoutePath.map((route, index) => {
+                var customBreadCrumb = props.customBreadCrumbProvider && props.customBreadCrumbProvider(route, index);
                 if (customBreadCrumb !== undefined) {
-                    return customBreadCrumb; // todo: use render func and pass key
+                    return customBreadCrumb;
                 } else {
                     return (
                         <LinkRouter key={index} to={route.build(props.routeData || {})}>

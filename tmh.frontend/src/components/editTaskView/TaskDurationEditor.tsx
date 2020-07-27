@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropertyEditorLayout from "./PropertyEditorLayout";
-import { InputAdornment, IconButton, makeStyles, FilledInput, Box, OutlinedInput } from "@material-ui/core";
+import { InputAdornment, IconButton, makeStyles, Box, OutlinedInput } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import _ from "lodash";
-import { resolveMinuteCountableRu, resolveHourCountableRu } from "../../utils/lang/resolveDurationRu";
+import { resolveMinuteCountableRu, resolveHourCountableRu } from "../../utils/lang/resolveDurationStringRu";
 
 const useStyles = makeStyles(() => ({
     durationInput: {

@@ -12,13 +12,15 @@ function useTasks() {
         localAppDataStorage.setTasks(tasks);
     }, [tasks]);
 
+    const nextIndex = () => (_(tasks).maxBy((t) => t.index)?.index || 0) + 1;
+
     const createTask = (task: Partial<ITask> & { title: string }) => {
         const newTask: ITask = {
             priority: 0,
             difficulty: null,
             duration: null,
             description: null,
-            order: (_(tasks).maxBy((t) => t.order)?.order || 0) + 1,
+            index: nextIndex(),
             complete: false,
             ...task,
             id: uuid.v4(),
@@ -39,7 +41,7 @@ function useTasks() {
 
     const getTask = (id: string) => tasks.find((t) => t.id === id);
 
-    return { tasks, createTask, updateTask, deleteTask, getTask };
+    return { tasks, createTask, updateTask, deleteTask, getTask, nextIndex };
 }
 
 const TasksContainer = createContainer(useTasks);

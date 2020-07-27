@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ITask } from "../../state/data/task";
 import { Container, makeStyles, IconButton, Box, InputBase, Divider, Paper } from "@material-ui/core";
 import TasksContainer from "../../state/containers/TasksContainer";
@@ -16,11 +16,15 @@ import DifficultyView from "./DifficultyView";
 import DurationView from "./DurationView";
 import classNames from "classnames";
 import markdownParser from "../../utils/markdownParser";
+import TaskList from "../taskList/TaskList";
+import SubtasksProgressView from "./SubtasksProgressView";
 
 interface TaskViewProps {
     isExpanded: boolean;
     taskId?: string;
+    parentTaskId?: string;
     onToggleExpandedState: () => void;
+    keyIn: string | number;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -64,15 +68,16 @@ const useStyles = makeStyles((theme) => ({
     taskSecondLine: {
         marginLeft: "30px",
         display: "grid",
-        gridTemplateColumns: "min-content auto",
+        gridTemplateColumns: "max-content auto",
         justifyItems: "right",
     },
     taskPropsContainer: {
         display: "grid",
         gridAutoFlow: "column",
-        gridTemplateColumns: "min-content",
+        gridTemplateColumns: "16px max-content",
         gridColumnGap: "0.5rem",
-        width: "280px",
+        width: "250px max-content",
+        alignItems: "center",
     },
     taskCollapsedDetailsContainer: {
         height: "0",
@@ -88,10 +93,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TaskView: React.FC<TaskViewProps> = (props) => {
-    const { tasks, createTask, updateTask, deleteTask } = TasksContainer.useContainer();
-    const [expanded, setExpanded] = useState(false);
-    const task = tasks.find((t) => t.id === props.taskId) ?? ({ title: "" } as ITask);
+    const { tasks, createTask, updateTask, deleteTask, getTask } = TasksContainer.useContainer();
+    const task = (props.taskId && getTask(props.taskId)) || ({ title: "", parentId: props.parentTaskId } as ITask);
     const isNewTask = task.id === undefined;
+    const children = isNewTask ? undefined : tasks.filter((t) => t.parentId === task.id);
 
     const saveTask = (title: string) => {
         task.title = title;
@@ -136,15 +141,19 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                         saveTask(event.target.value);
                     }}
                 />
-                <Link to={routes.root.tasks.edit.build({ taskId: task.id })}>
-                    <IconButton size="small">
-                        <EditIcon />
-                    </IconButton>
-                </Link>
-                <Divider orientation="vertical" className={styles.taskSummaryDivider} />
-                <IconButton size="small" onClick={() => deleteTask(task.id)}>
-                    <ClearIcon />
-                </IconButton>
+                {!isNewTask && (
+                    <>
+                        <Link to={routes.root.tasks.edit.build({ taskId: task.id })}>
+                            <IconButton size="small">
+                                <EditIcon />
+                            </IconButton>
+                        </Link>
+                        <Divider orientation="vertical" className={styles.taskSummaryDivider} />
+                        <IconButton size="small" onClick={() => deleteTask(task.id)}>
+                            <ClearIcon />
+                        </IconButton>
+                    </>
+                )}
             </Box>
 
             {!isNewTask && (
@@ -153,60 +162,25 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                         <PriorityView priority={task.priority} />
                         {task.difficulty && <DifficultyView difficulty={task.difficulty} />}
                         {task.duration && <DurationView duration={task.duration} />}
+                        {children && children.length > 0 ? <SubtasksProgressView children={children} /> : null}
                     </Box>
-                    <IconButton size="small" onClick={() => setExpanded(!expanded)}>
-                        {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                    </IconButton>
+                    {task.description || (children && children.length > 0) ? (
+                        <IconButton size="small" onClick={() => props.onToggleExpandedState()}>
+                            {props.isExpanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                        </IconButton>
+                    ) : null}
                 </Box>
             )}
-            <Container className={classNames({ [styles.taskExpandedDetailsContainer]: expanded }, { [styles.taskCollapsedDetailsContainer]: !expanded })}>
-                <Paper className={styles.taskDescription} elevation={2}>
-                    {task.description && <div dangerouslySetInnerHTML={{ __html: markdownParser.render(task.description) }}></div>}
-                </Paper>
+            <Container className={classNames({ [styles.taskExpandedDetailsContainer]: props.isExpanded }, { [styles.taskCollapsedDetailsContainer]: !props.isExpanded })}>
+                {task.description && (
+                    <Paper className={styles.taskDescription} elevation={2}>
+                        <div dangerouslySetInnerHTML={{ __html: markdownParser.render(task.description) }}></div>
+                    </Paper>
+                )}
+                {children && children.length > 0 ? <TaskList readOnly parentTaskId={task!.id} tasks={children} allowCompletion /> : null}
             </Container>
         </Container>
     );
-
-    // return (
-    //     <Container className={styles.taskContainer}>
-    //         <TextField
-    //             placeholder={isNewTask ? "Новая задача" : undefined}
-    //             value={task.title}
-    //             onChange={(event) => {
-    //                 saveTask(event.target.value);
-    //             }}
-    //             margin="none"
-    //             label={
-    //                 !isNewTask && (
-    //                     <Box className={styles.taskPropsContainer}>
-    //                         <PriorityView priority={task.priority} />
-    //                         {task.difficulty && <DifficultyView difficulty={task.difficulty} />}
-    //                         {task.duration && <DurationView duration={task.duration} />}
-    //                     </Box>
-    //                 )
-    //             }
-    //             variant="outlined"
-    //             fullWidth
-    //             InputProps={{
-    //                 startAdornment: resolveIcon(),
-    //                 endAdornment:
-    //                     task.id !== undefined ? (
-    //                         <InputAdornment position="end">
-    //                             <Link to={routes.root.tasks.edit.build({ taskId: task.id })}>
-    //                                 <IconButton>
-    //                                     <EditIcon />
-    //                                 </IconButton>
-    //                             </Link>
-    //                             <IconButton onClick={() => deleteTask(task.id)}>
-    //                                 <ClearIcon />
-    //                             </IconButton>
-    //                         </InputAdornment>
-    //                     ) : null,
-    //                 className: task.complete ? styles.completeTaskInput : undefined,
-    //             }}
-    //         />
-    //     </Container>
-    // );
 };
 
 export default TaskView;

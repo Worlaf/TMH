@@ -1,19 +1,39 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import EditTaskView from "../components/editTaskView/EditTaskView";
-import BreadCrumbs from "../components/breadCrumb/BreadCrumbs";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import routes from "../utils/routes";
 import TasksContainer from "../state/containers/TasksContainer";
-import { Typography } from "@material-ui/core";
+import { Button, Container, makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    navigationContainer: {
+        marginTop: "1rem",
+        marginBottom: "1rem",
+    },
+}));
 
 const EditTaskPage: React.FC = () => {
     const routeParams = useParams<{ taskId: string }>();
     const task = TasksContainer.useContainer().getTask(routeParams.taskId);
-    const route = routes.root.tasks.edit;
+
+    if (!task) throw Error(`Не удалось получить задачу по идентификатору ${routeParams.taskId}`);
+
+    const styles = useStyles();
 
     return (
         <>
-            <BreadCrumbs route={route} customRouteBreadCrumbs={{ [route.key]: <Typography>{task!.title}</Typography> }} routeData={routeParams} />
+            <Container className={styles.navigationContainer}>
+                {task.parentId ? (
+                    <Button variant="outlined" color="primary" component={RouterLink} to={routes.root.tasks.edit.build({ taskId: task.parentId })}>
+                        <ArrowBackIcon />
+                    </Button>
+                ) : (
+                    <Button variant="outlined" color="primary" component={RouterLink} to={routes.root.tasks.build({})}>
+                        <ArrowBackIcon />
+                    </Button>
+                )}
+            </Container>
             <EditTaskView taskId={routeParams.taskId} />
         </>
     );
