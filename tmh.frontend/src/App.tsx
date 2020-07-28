@@ -1,16 +1,31 @@
 import React from "react";
 import "./App.css";
 import TasksContainer from "./state/containers/TasksContainer";
-import TaskList from "./components/taskList/TaskList";
 import { CssBaseline } from "@material-ui/core";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
+import routes from "./utils/routes";
+import EditTaskPage from "./pages/EditTaskPage";
+import TaskListPage from "./pages/TaskListPage";
 
 function App() {
     return (
         <div className="App">
             <CssBaseline />
-            <TasksContainer.Provider>
-                <TaskList />
-            </TasksContainer.Provider>
+            <BrowserRouter>
+                <TasksContainer.Provider>
+                    <Switch>
+                        <Route path={routes.root.template} exact>
+                            <TaskListPage />
+                        </Route>
+                        <Route path={routes.root.tasks.template} exact>
+                            <TaskListPage />
+                        </Route>
+                        <Route path={routes.root.tasks.edit.template} exact>
+                            <EditTaskPage />
+                        </Route>
+                    </Switch>
+                </TasksContainer.Provider>
+            </BrowserRouter>
         </div>
     );
 }

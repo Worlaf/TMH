@@ -1,81 +1,104 @@
-import React, { useState } from "react";
-import TasksContainer from "../../state/containers/TasksContainer";
-import { Container, Button, Box, makeStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Container, Box, makeStyles } from "@material-ui/core";
 import _ from "lodash";
-import TaskView from "./TaskView";
+import TaskView from "../taskView/TaskView";
+import { ITask } from "../../state/data/task";
+import SimpleReadonlyTaskView from "../taskView/SimpleReadonlyTaskView";
+import TasksContainer from "../../state/containers/TasksContainer";
+import { ISortMode, TaskSortSettingsView, SortDirection, SortModeType } from "./TaskSortSettingsView";
 
 const useStyles = makeStyles((theme) => ({
     taskList: {
+        padding: "0",
+        borderLeftWidth: "4px",
+        borderLeftStyle: "solid",
+        borderLeftColor: theme.palette.grey["200"],
+        paddingLeft: "0.5em",
         "&>div": {
             marginBottom: theme.spacing(1),
         },
     },
+    title: {
+        marginTop: theme.spacing(2),
+        fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.grey["600"],
+        fontSize: theme.typography.fontSize,
+    },
 }));
 
-const TaskList: React.FC = () => {
-    const { tasks, createTask, updateTask } = TasksContainer.useContainer();
-    const [hasEmptyTask, setHasEmptyTask] = useState(false);
-    const [expandedTaskId, setExpandedTaskId] = useState<string>();
-    const [taskInEditModeId, setTaskInEditModeId] = useState<string>();
-    const classes = useStyles();
+interface TaskListProps {
+    tasks: ITask[];
+    allowAdding?: boolean;
+    parentTaskId?: string;
+    readOnly?: boolean;
+    allowCompletion?: boolean;
+    allowSorting?: boolean;
+    title?: string;
+}
 
-    return (
-        <Container className={classes.taskList}>
+const TaskList: React.FC<TaskListProps> = (props) => {
+    const { nextIndex } = TasksContainer.useContainer();
+    const [expandedTaskId, setExpandedTaskId] = useState<string>();
+    const [sortModes, setSortModes] = useState<ISortMode[]>([]);
+    const [taskListData, setTaskListData] = useState({
+        tasks: props.tasks,
+        nextIndex: nextIndex(),
+    });
+
+    const styles = useStyles();
+
+    useEffect(() => {
+        let tasks = _(props.tasks).orderBy((t) => t.index);
+
+        const resolveDirectionStr = (direction: SortDirection) => (direction === SortDirection.Ascending ? "asc" : "desc");
+
+        sortModes.forEach((m) => {
+            switch (m.mode) {
+                case SortModeType.Priority:
+                    tasks = tasks.orderBy((t) => t.priority, resolveDirectionStr(m.direction));
+                    break;
+                case SortModeType.Difficulty:
+                    tasks = tasks.orderBy((t) => t.difficulty, resolveDirectionStr(m.direction));
+                    break;
+                case SortModeType.Duration:
+                    tasks = tasks.orderBy((t) => t.duration, resolveDirectionStr(m.direction));
+                    break;
+            }
+        });
+
+        setTaskListData({
+            tasks: tasks.value(),
+            nextIndex: nextIndex(),
+        });
+    }, [props.tasks, sortModes]);
+
+    return taskListData.tasks.length > 0 || props.allowAdding ? (
+        <Container className={styles.taskList}>
+            {props.title && <Container className={styles.title}>{props.title}</Container>}
+            {props.allowSorting && <TaskSortSettingsView activeSortModes={sortModes} activeSortModesChanged={(newSortModes) => setSortModes(newSortModes)} />}
             <Box>
-                <Button
-                    disabled={hasEmptyTask}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                        setHasEmptyTask(true);
-                        setExpandedTaskId(undefined);
-                        setTaskInEditModeId(undefined);
-                    }}
-                >
-                    Добавить задачу
-                </Button>
-            </Box>
-            <Box>
-                {hasEmptyTask ? (
-                    <TaskView
-                        task={{ title: "", description: "", children: [], uuid: "", order: tasks.length, duration: null, difficulty: null, complete: false }}
-                        isExpanded={true}
-                        isInEditMode={true}
-                        onSave={(task) => {
-                            setHasEmptyTask(false);
-                            createTask(task);
-                        }}
-                        onToggleExpandedState={() => {}}
-                        onToggleInEditMode={() => {}}
-                    />
-                ) : null}
-                {_(tasks)
-                    .orderBy((t) => t.order)
-                    .map((t) => (
-                        <TaskView
-                            key={t.uuid}
-                            task={t}
-                            isExpanded={t.uuid === expandedTaskId}
-                            isInEditMode={t.uuid === taskInEditModeId}
-                            onSave={(task) => {
-                                updateTask(task);
-                                setTaskInEditModeId(undefined);
-                            }}
-                            onToggleExpandedState={() => {
-                                if (!hasEmptyTask) {
-                                    if (expandedTaskId !== t.uuid) setExpandedTaskId(t.uuid);
+                {_(props.allowAdding && !props.readOnly ? [...taskListData.tasks, undefined] : taskListData.tasks)
+                    .map((task) =>
+                        props.readOnly ? (
+                            <SimpleReadonlyTaskView taskId={task!.id} key={task!.index} keyIn={task!.index} allowCompletion={props.allowCompletion} />
+                        ) : (
+                            <TaskView
+                                keyIn={task?.index ?? taskListData.nextIndex}
+                                key={task?.index ?? taskListData.nextIndex}
+                                taskId={task?.id}
+                                parentTaskId={props.parentTaskId}
+                                isExpanded={expandedTaskId !== undefined && task?.id === expandedTaskId}
+                                onToggleExpandedState={() => {
+                                    if (expandedTaskId !== task?.id) setExpandedTaskId(task?.id);
                                     else setExpandedTaskId(undefined);
-                                }
-                            }}
-                            onToggleInEditMode={(edit) => {
-                                if (!hasEmptyTask && edit) setTaskInEditModeId(t.uuid);
-                            }}
-                        />
-                    ))
+                                }}
+                            />
+                        )
+                    )
                     .value()}
             </Box>
         </Container>
-    );
+    ) : null;
 };
 
 export default TaskList;
