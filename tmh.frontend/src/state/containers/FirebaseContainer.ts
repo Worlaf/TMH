@@ -1,10 +1,10 @@
-import Firebase from "./firebase";
+import Firebase from "../../firebase";
 import { createContainer } from "unstated-next";
 
-const firebase = new Firebase();
+export const firebaseInstance = new Firebase();
 
 function useFirebase() {
-    return firebase;
+    return firebaseInstance;
 }
 
 const FirebaseContainer = createContainer(useFirebase);

@@ -3,13 +3,14 @@ import { createContainer } from "unstated-next";
 import { ITask } from "../data/task";
 import * as uuid from "uuid";
 import _ from "lodash";
-import localAppDataStorage from "../data/storage";
+import UserDataContainer from "./UserDataContainer";
 
 function useTasks() {
-    const [tasks, setTasks] = useState<ITask[]>(localAppDataStorage.getTasks());
+    const { userData, updateUserData } = UserDataContainer.useContainer();
+    const [tasks, setTasks] = useState<ITask[]>(userData.tasks);
 
     useEffect(() => {
-        localAppDataStorage.setTasks(tasks);
+        if (userData.tasks !== tasks) updateUserData({ tasks: tasks });
     }, [tasks]);
 
     const nextIndex = () => (_(tasks).maxBy((t) => t.index)?.index || 0) + 1;
@@ -22,6 +23,7 @@ function useTasks() {
             description: null,
             index: nextIndex(),
             complete: false,
+            parentId: null,
             ...task,
             id: uuid.v4(),
         };
