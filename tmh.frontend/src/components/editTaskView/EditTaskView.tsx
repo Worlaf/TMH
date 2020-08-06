@@ -34,7 +34,7 @@ const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
                 <TaskPriorityEditor priority={task.priority} onChange={(value) => updateTask({ ...task, priority: value })} />
                 <TaskDurationEditor duration={task.duration} onChange={(value) => updateTask({ ...task, duration: value })} />
                 <TaskDescriptionEditor description={task.description} onChange={(value) => updateTask({ ...task, description: value })} />
-                {task.parentId === undefined ? (
+                {task.parentId === null ? (
                     <PropertyEditorLayout label="Подзадачи">
                         <TaskList parentTaskId={task.id} tasks={tasks.filter((t) => t.parentId === task.id)} allowAdding={true} />
                     </PropertyEditorLayout>

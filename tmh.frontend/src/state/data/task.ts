@@ -12,7 +12,7 @@ export interface ITask {
     index: number;
     // resources
     // location
-    parentId?: string;
+    parentId: string | null;
     complete: boolean;
 }
 

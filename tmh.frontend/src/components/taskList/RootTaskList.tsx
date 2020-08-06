@@ -8,8 +8,8 @@ const RootTaskList: React.FC = () => {
 
     return (
         <Container>
-            <TaskList tasks={tasks.filter((t) => t.parentId === undefined && !t.complete)} allowAdding={true} allowSorting title="Актуальные задачи" />
-            <TaskList tasks={tasks.filter((t) => t.parentId === undefined && t.complete)} allowAdding={false} title="Закрытые" />
+            <TaskList tasks={tasks.filter((t) => t.parentId === null && !t.complete)} allowAdding={true} allowSorting title="Актуальные задачи" />
+            <TaskList tasks={tasks.filter((t) => t.parentId === null && t.complete)} allowAdding={false} title="Закрытые" />
         </Container>
     );
 };

@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TaskView: React.FC<TaskViewProps> = (props) => {
     const { tasks, createTask, updateTask, deleteTask, getTask } = TasksContainer.useContainer();
-    const task = (props.taskId && getTask(props.taskId)) || ({ title: "", parentId: props.parentTaskId } as ITask);
+    const task = (props.taskId && getTask(props.taskId)) || ({ title: "", parentId: props.parentTaskId ?? null } as ITask);
     const isNewTask = task.id === undefined;
     const children = isNewTask ? undefined : tasks.filter((t) => t.parentId === task.id);
 
