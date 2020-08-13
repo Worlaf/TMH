@@ -7,6 +7,7 @@ import TaskDurationEditor from "./TaskDurationEditor";
 import TaskDescriptionEditor from "./TaskDescriptionEditor";
 import PropertyEditorLayout from "./PropertyEditorLayout";
 import TaskList from "../taskList/TaskList";
+import TaskTagsEditor from "./TaskTagsEditor";
 
 const useStyles = makeStyles((theme) => ({
     taskTitleInput: {
@@ -33,12 +34,13 @@ const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
                 <TaskDifficultyEditor difficulty={task.difficulty} onChange={(value) => updateTask({ ...task, difficulty: value })} />
                 <TaskPriorityEditor priority={task.priority} onChange={(value) => updateTask({ ...task, priority: value })} />
                 <TaskDurationEditor duration={task.duration} onChange={(value) => updateTask({ ...task, duration: value })} />
-                <TaskDescriptionEditor description={task.description} onChange={(value) => updateTask({ ...task, description: value })} />
+                <TaskTagsEditor tagIds={task.tagIds} onChange={(value) => updateTask({ ...task, tagIds: value })} />
                 {task.parentId === null ? (
                     <PropertyEditorLayout label="Подзадачи">
                         <TaskList parentTaskId={task.id} tasks={tasks.filter((t) => t.parentId === task.id)} allowAdding={true} />
                     </PropertyEditorLayout>
                 ) : null}
+                <TaskDescriptionEditor description={task.description} onChange={(value) => updateTask({ ...task, description: value })} />
             </Container>
         );
     else throw Error(`Не удалось найти задачу с указанным идентификатором: '${props.taskId}'.`);

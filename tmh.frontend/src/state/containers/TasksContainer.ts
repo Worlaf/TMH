@@ -24,6 +24,7 @@ function useTasks() {
             index: nextIndex(),
             complete: false,
             parentId: null,
+            tagIds: [],
             ...task,
             id: uuid.v4(),
         };

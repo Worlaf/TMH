@@ -18,6 +18,7 @@ import classNames from "classnames";
 import markdownParser from "../../utils/markdownParser";
 import TaskList from "../taskList/TaskList";
 import SubtasksProgressView from "./SubtasksProgressView";
+import TaskTagsView from "./TaskTagsView";
 
 interface TaskViewProps {
     isExpanded: boolean;
@@ -65,13 +66,16 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         marginBottom: "0.5em",
     },
-    taskSecondLine: {
+    taskTagsContainer: {
+        marginLeft: "30px",
+    },
+    taskPropsContainer: {
         marginLeft: "30px",
         display: "grid",
         gridTemplateColumns: "max-content auto",
         justifyItems: "right",
     },
-    taskPropsContainer: {
+    taskMainPropsContainer: {
         display: "grid",
         gridAutoFlow: "column",
         gridTemplateColumns: "16px max-content",
@@ -127,14 +131,14 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
         }
     };
 
-    const styles = useStyles();
+    const classes = useStyles();
 
     return (
-        <Container className={classNames(styles.taskContainer, { [styles.completeTaskContainer]: task.complete })}>
-            <Box className={styles.taskSummaryContainer}>
+        <Container className={classNames(classes.taskContainer, { [classes.completeTaskContainer]: task.complete })}>
+            <Box className={classes.taskSummaryContainer}>
                 {resolveIcon()}
                 <InputBase
-                    className={classNames(styles.taskTitleInput, { [styles.completeTaskTitleInput]: task.complete })}
+                    className={classNames(classes.taskTitleInput, { [classes.completeTaskTitleInput]: task.complete })}
                     placeholder={isNewTask ? "Новая задача" : undefined}
                     value={task.title}
                     onChange={(event) => {
@@ -148,7 +152,7 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                                 <EditIcon />
                             </IconButton>
                         </Link>
-                        <Divider orientation="vertical" className={styles.taskSummaryDivider} />
+                        <Divider orientation="vertical" className={classes.taskSummaryDivider} />
                         <IconButton size="small" onClick={() => deleteTask(task.id)}>
                             <ClearIcon />
                         </IconButton>
@@ -157,8 +161,13 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
             </Box>
 
             {!isNewTask && (
-                <Box className={styles.taskSecondLine}>
-                    <Box className={styles.taskPropsContainer}>
+                <Box className={classes.taskTagsContainer}>
+                    <TaskTagsView tagIds={task.tagIds} />
+                </Box>
+            )}
+            {!isNewTask && (
+                <Box className={classes.taskPropsContainer}>
+                    <Box className={classes.taskMainPropsContainer}>
                         <PriorityView priority={task.priority} />
                         {task.difficulty && <DifficultyView difficulty={task.difficulty} />}
                         {task.duration && <DurationView duration={task.duration} />}
@@ -171,9 +180,9 @@ const TaskView: React.FC<TaskViewProps> = (props) => {
                     ) : null}
                 </Box>
             )}
-            <Container className={classNames({ [styles.taskExpandedDetailsContainer]: props.isExpanded }, { [styles.taskCollapsedDetailsContainer]: !props.isExpanded })}>
+            <Container className={classNames({ [classes.taskExpandedDetailsContainer]: props.isExpanded }, { [classes.taskCollapsedDetailsContainer]: !props.isExpanded })}>
                 {task.description && (
-                    <Paper className={styles.taskDescription} elevation={2}>
+                    <Paper className={classes.taskDescription} elevation={2}>
                         <div dangerouslySetInnerHTML={{ __html: markdownParser.render(task.description) }}></div>
                     </Paper>
                 )}

@@ -3,6 +3,7 @@ import FirebaseContainer from "../state/containers/FirebaseContainer";
 import { Button, CircularProgress, Typography, Box } from "@material-ui/core";
 import CurrentUserContainer from "../state/containers/CurrentUserContainer";
 import CenteredPaper from "../layouts/centeredPaper";
+import appConfig from "../utils/appConfig";
 
 export default function SignIn(props: { children: React.ReactElement }) {
     const firebase = FirebaseContainer.useContainer();
@@ -12,26 +13,31 @@ export default function SignIn(props: { children: React.ReactElement }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        auth.getRedirectResult()
-            .then((result) => {
-                const user = result.user ?? auth.currentUser;
-                setCurrentUser(
-                    user && {
-                        email: user.email!,
-                        accountImageUrl: user.photoURL,
-                    }
-                );
+        if (appConfig.skipAuthorization) {
+            setCurrentUser({ accountImageUrl: null, email: "anonymous" });
+            setIsLoading(false);
+        } else {
+            auth.getRedirectResult()
+                .then((result) => {
+                    const user = result.user ?? auth.currentUser;
+                    setCurrentUser(
+                        user && {
+                            email: user.email!,
+                            accountImageUrl: user.photoURL,
+                        }
+                    );
 
-                setIsLoading(false);
-            })
-            .catch((reason) => {
-                console.log("Redirect auth failed: ", reason);
+                    setIsLoading(false);
+                })
+                .catch((reason) => {
+                    console.log("Redirect auth failed: ", reason);
 
-                setIsLoading(false);
-            });
+                    setIsLoading(false);
+                });
+        }
     }, []);
 
-    if (isLoading || auth.currentUser == null) {
+    if (!appConfig.skipAuthorization && (isLoading || auth.currentUser == null)) {
         return (
             <CenteredPaper>
                 {isLoading ? (

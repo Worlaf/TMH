@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
 
 interface IPropertyEditorLayoutProps {
     label: string;
-    children: React.ReactNode;
+    children: React.ReactNode | React.ReactNode[] | null;
 }
 
 const PropertyEditorLayout: React.FC<IPropertyEditorLayoutProps> = (props) => {

@@ -14,6 +14,7 @@ export interface ITask {
     // location
     parentId: string | null;
     complete: boolean;
+    tagIds: string[];
 }
 
 export function getPriorityLabel(priority: Priority) {

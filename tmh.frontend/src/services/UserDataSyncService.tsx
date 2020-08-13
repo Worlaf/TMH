@@ -7,6 +7,14 @@ import { CircularProgress, Snackbar, Box } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import ProgressWithIcon from "../components/progressWithIcon";
 import debounce from "../utils/debounce";
+import appConfig from "../utils/appConfig";
+
+function fixUserData(data: IUserData) {
+    // data migration
+    if (data.tags === null) data.tags = [];
+
+    data.tasks = data.tasks.map((t) => (t.tagIds !== null && t.tagIds !== undefined ? t : { ...t, tagIds: [] }));
+}
 
 export default function UserDataSyncService(props: { children: React.ReactElement | null }) {
     const { userData, updateUserData } = UserDataContainer.useContainer();
@@ -23,32 +31,41 @@ export default function UserDataSyncService(props: { children: React.ReactElemen
     };
 
     useEffect(() => {
-        getUserDoc()
-            .get()
-            .then((doc) => {
-                const result = (doc.data() as IUserData) ?? {
-                    tasks: [],
-                };
+        if (appConfig.useLocalStorage) {
+            const dataJson = window.localStorage.getItem(appConfig.localStorageKey!);
+            updateUserData((dataJson && (JSON.parse(dataJson) as IUserData)) || { tasks: [], tags: [] });
+            setIsDataReady(true);
+        } else {
+            getUserDoc()
+                .get()
+                .then((doc) => {
+                    const result = (doc.data() as IUserData) ?? {
+                        tasks: [],
+                        tags: [],
+                    };
 
-                console.log("Data loaded: ", result);
+                    fixUserData(result);
 
-                updateUserData(result);
-                setIsDataReady(true);
-            });
+                    updateUserData(result);
+                    setIsDataReady(true);
+                });
+        }
     }, []);
 
     useEffect(() => {
-        debounce(() => {
-            if (!isDataReady) return;
+        if (appConfig.useLocalStorage) {
+            window.localStorage.setItem(appConfig.localStorageKey!, JSON.stringify({ ...userData }));
+        } else {
+            debounce(() => {
+                if (!isDataReady) return;
 
-            console.log("Save data", userData);
+                setIsSaving(true);
 
-            setIsSaving(true);
-
-            getUserDoc()
-                .set(userData, { merge: true })
-                .then(() => setIsSaving(false));
-        }, 1000);
+                getUserDoc()
+                    .set(userData, { merge: true })
+                    .then(() => setIsSaving(false));
+            }, 1000);
+        }
     }, [userData]);
 
     if (isDataReady) {
