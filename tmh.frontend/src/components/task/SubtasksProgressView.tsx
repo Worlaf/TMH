@@ -1,5 +1,5 @@
 import React from "react";
-import { ITask } from "../../state/data/task";
+import { ITask } from "../../state/data/Task";
 import { Box } from "@material-ui/core";
 import { faTasks } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

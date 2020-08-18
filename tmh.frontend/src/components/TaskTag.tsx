@@ -1,5 +1,5 @@
 import React from "react";
-import { ITag } from "../state/data/tag";
+import { ITag } from "../state/data/Tag";
 import { Chip, ChipProps } from "@material-ui/core";
 
 export default function TaskTag(props: { tag: ITag; className?: string; onClick?: () => void } & ChipProps) {

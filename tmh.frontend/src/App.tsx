@@ -9,7 +9,7 @@ import TaskListPage from "./pages/TaskListPage";
 import SignIn from "./services/SignIn";
 import FirebaseContainer from "./state/containers/FirebaseContainer";
 import CurrentUserContainer from "./state/containers/CurrentUserContainer";
-import CommonLayout from "./layouts/commonLayout";
+import CommonLayout from "./layouts/CommonLayout";
 import UserDataContainer from "./state/containers/UserDataContainer";
 import UserDataSyncService from "./services/UserDataSyncService";
 

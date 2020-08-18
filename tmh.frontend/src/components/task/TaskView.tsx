@@ -1,5 +1,5 @@
 import React from "react";
-import { ITask } from "../../state/data/task";
+import { ITask } from "../../state/data/Task";
 import { Container, makeStyles, IconButton, Box, InputBase, Divider, Paper } from "@material-ui/core";
 import TasksContainer from "../../state/containers/TasksContainer";
 import AddIcon from "@material-ui/icons/Add";

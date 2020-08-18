@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import EditTaskView from "../components/editTaskView/EditTaskView";
+import EditTaskView from "../components/editTask/EditTaskView";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import routes from "../utils/routes";
 import TasksContainer from "../state/containers/TasksContainer";
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const EditTaskPage: React.FC = () => {
+export default function EditTaskPage() {
     const routeParams = useParams<{ taskId: string }>();
     const task = TasksContainer.useContainer().getTask(routeParams.taskId);
 
@@ -37,6 +37,4 @@ const EditTaskPage: React.FC = () => {
             <EditTaskView taskId={routeParams.taskId} />
         </>
     );
-};
-
-export default EditTaskPage;
+}

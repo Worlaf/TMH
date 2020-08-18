@@ -1,5 +1,5 @@
-import { ITask } from "./task";
-import { ITag } from "./tag";
+import { ITask } from "./Task";
+import { ITag } from "./Tag";
 
 export interface IUserData {
     tasks: ITask[];

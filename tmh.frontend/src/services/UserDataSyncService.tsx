@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import UserDataContainer from "../state/containers/UserDataContainer";
 import FirebaseContainer from "../state/containers/FirebaseContainer";
-import { IUserData } from "../state/data/userData";
-import CenteredPaper from "../layouts/centeredPaper";
+import { IUserData } from "../state/data/UserData";
+import CenteredPaper from "../layouts/CenteredPaper";
 import { CircularProgress, Snackbar, Box } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
-import ProgressWithIcon from "../components/progressWithIcon";
+import ProgressWithIcon from "../components/ProgressWithIcon";
 import debounce from "../utils/debounce";
 import appConfig from "../utils/appConfig";
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { getPriorityColor, Priority } from "../../state/data/task";
+import { getPriorityColor, Priority } from "../../state/data/Task";
 import { Box } from "@material-ui/core";
-import PriorityIcon from "../priorityIcon";
+import PriorityIcon from "../PriorityIcon";
 
 interface IPriorityViewProps {
     priority: Priority;

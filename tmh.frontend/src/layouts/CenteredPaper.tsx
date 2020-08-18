@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, Paper, Box } from "@material-ui/core";
-import CenteredContentLayout from "./centeredContentLayout";
+import CenteredContentLayout from "./CenteredContentLayout";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

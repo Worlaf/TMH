@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import { ITask } from "../data/task";
+import { ITask } from "../data/Task";
 import * as uuid from "uuid";
 import _ from "lodash";
 import UserDataContainer from "./UserDataContainer";

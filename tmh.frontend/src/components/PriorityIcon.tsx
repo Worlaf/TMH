@@ -1,5 +1,5 @@
 import React from "react";
-import { Priority, getPriorityColor, getPriorityLabel } from "../state/data/task";
+import { Priority, getPriorityColor, getPriorityLabel } from "../state/data/Task";
 import { faAngleDoubleDown, faAngleDown, faMinus, faAngleUp, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";

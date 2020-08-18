@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Container, Box, makeStyles } from "@material-ui/core";
 import _ from "lodash";
-import TaskView from "../taskView/TaskView";
-import { ITask } from "../../state/data/task";
-import SimpleReadonlyTaskView from "../taskView/SimpleReadonlyTaskView";
+import TaskView from "../task/TaskView";
+import { ITask } from "../../state/data/Task";
+import SimpleReadonlyTaskView from "../task/SimpleReadonlyTaskView";
 import TasksContainer from "../../state/containers/TasksContainer";
 import { ISortMode, TaskSortSettingsView, SortDirection, SortModeType } from "./TaskSortSettingsView";
 

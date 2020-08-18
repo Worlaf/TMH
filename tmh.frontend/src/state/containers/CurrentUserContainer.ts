@@ -1,6 +1,6 @@
 import { createContainer } from "unstated-next";
 import { useState } from "react";
-import { IUser } from "../data/user";
+import { IUser } from "../data/User";
 
 function useCurrentUser() {
     const [currentUser, setCurrentUser] = useState<IUser | null>(null);

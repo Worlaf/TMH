@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FirebaseContainer from "../state/containers/FirebaseContainer";
 import { Button, CircularProgress, Typography, Box } from "@material-ui/core";
 import CurrentUserContainer from "../state/containers/CurrentUserContainer";
-import CenteredPaper from "../layouts/centeredPaper";
+import CenteredPaper from "../layouts/CenteredPaper";
 import appConfig from "../utils/appConfig";
 
 export default function SignIn(props: { children: React.ReactElement }) {

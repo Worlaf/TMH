@@ -4,7 +4,7 @@ import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
 import TimerIcon from "@material-ui/icons/Timer";
-import PriorityIcon from "../priorityIcon";
+import PriorityIcon from "../PriorityIcon";
 
 export enum SortDirection {
     None = 0,

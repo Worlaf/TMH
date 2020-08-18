@@ -1,8 +1,6 @@
 import React from "react";
 import RootTaskList from "../components/taskList/RootTaskList";
 
-const TaskListPage: React.FC = () => {
+export default function TaskListPage() {
     return <RootTaskList />;
-};
-
-export default TaskListPage;
+}

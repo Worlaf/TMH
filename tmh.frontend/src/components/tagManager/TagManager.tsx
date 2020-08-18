@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, TextField, Chip, makeStyles, IconButton, InputAdornment } from "@material-ui/core";
 import UserDataContainer from "../../state/containers/UserDataContainer";
-import { ITag } from "../../state/data/tag";
+import { ITag } from "../../state/data/Tag";
 import * as uuid from "uuid";
 import _ from "lodash";
 import CreateIcon from "@material-ui/icons/Create";
@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 import TaskTag from "../TaskTag";
-import { ColorPicker } from "../colorPicker";
+import { ColorPicker } from "../ColorPicker";
 
 interface ITagManagerProps {
     openDialog: boolean;

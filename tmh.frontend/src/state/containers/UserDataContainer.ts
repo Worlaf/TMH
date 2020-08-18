@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IUserData } from "../data/userData";
+import { IUserData } from "../data/UserData";
 import { createContainer } from "unstated-next";
 
 function useUserData() {
