@@ -34,6 +34,7 @@ interface TaskListProps {
     allowCompletion?: boolean;
     allowSorting?: boolean;
     title?: string;
+    renderTaskCustomIcon?: (task: ITask) => React.ReactNode;
 }
 
 const TaskList: React.FC<TaskListProps> = (props) => {
@@ -49,6 +50,15 @@ const TaskList: React.FC<TaskListProps> = (props) => {
 
     useEffect(() => {
         let tasks = _(props.tasks).orderBy((t) => t.index);
+
+        if (
+            _.isEqual(
+                taskListData.tasks.map((t) => ({ id: t.id, priority: t.priority, difficulty: t.difficulty, duration: t.duration })),
+                tasks.map((t) => ({ id: t.id, priority: t.priority, difficulty: t.difficulty, duration: t.duration }))
+            )
+        ) {
+            return;
+        }
 
         const resolveDirectionStr = (direction: SortDirection) => (direction === SortDirection.Ascending ? "asc" : "desc");
 
@@ -80,18 +90,19 @@ const TaskList: React.FC<TaskListProps> = (props) => {
                 {_(props.allowAdding && !props.readOnly ? [...taskListData.tasks, undefined] : taskListData.tasks)
                     .map((task) =>
                         props.readOnly ? (
-                            <SimpleReadonlyTaskView taskId={task!.id} key={task!.index} keyIn={task!.index} allowCompletion={props.allowCompletion} />
+                            <SimpleReadonlyTaskView task={task!} key={task!.index} keyIn={task!.index} allowCompletion={props.allowCompletion} />
                         ) : (
                             <TaskView
-                                keyIn={task?.index ?? taskListData.nextIndex}
+                                allowDelete={true}
                                 key={task?.index ?? taskListData.nextIndex}
-                                taskId={task?.id}
+                                task={task}
                                 parentTaskId={props.parentTaskId}
                                 isExpanded={expandedTaskId !== undefined && task?.id === expandedTaskId}
                                 onToggleExpandedState={() => {
                                     if (expandedTaskId !== task?.id) setExpandedTaskId(task?.id);
                                     else setExpandedTaskId(undefined);
                                 }}
+                                renderCustomIcon={props.renderTaskCustomIcon}
                             />
                         )
                     )

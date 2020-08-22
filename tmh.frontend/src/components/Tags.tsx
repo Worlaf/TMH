@@ -1,7 +1,7 @@
 import React from "react";
-import UserDataContainer from "../../state/containers/UserDataContainer";
-import TaskTag from "../TaskTag";
-import { makeStyles } from "@material-ui/core";
+import UserDataContainer from "../state/containers/UserDataContainer";
+import Tag from "./Tag";
+import { makeStyles, Box } from "@material-ui/core";
 import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
@@ -11,13 +11,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TaskTagsView(props: { tagIds: string[] }) {
+export default function Tags(props: { tagIds: string[]; className?: string }) {
     const { userData } = UserDataContainer.useContainer();
 
     const classes = useStyles();
 
     return (
-        <div>
+        <Box className={props.className}>
             {_(props.tagIds)
                 .map((id) => {
                     const tag = userData.tags.find((t) => t.id === id);
@@ -29,8 +29,8 @@ export default function TaskTagsView(props: { tagIds: string[] }) {
                     return tag;
                 })
                 .orderBy((tag) => tag.label)
-                .map((tag) => <TaskTag key={tag.id} tag={tag} size="small" className={classes.tag} />)
+                .map((tag) => <Tag key={tag.id} tag={tag} size="small" className={classes.tag} />)
                 .value()}
-        </div>
+        </Box>
     );
 }

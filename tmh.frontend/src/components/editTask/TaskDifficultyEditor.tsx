@@ -1,5 +1,5 @@
 import React from "react";
-import PropertyEditorLayout from "./PropertyEditorLayout";
+import PropertyEditorLayout from "../commonPropertyEditors/PropertyEditorLayout";
 import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
 import Rating from "@material-ui/lab/Rating";
 

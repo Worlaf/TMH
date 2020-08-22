@@ -12,7 +12,7 @@ import classNames from "classnames";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
-import TaskTag from "../TaskTag";
+import Tag from "../Tag";
 import { ColorPicker } from "../ColorPicker";
 
 interface ITagManagerProps {
@@ -77,7 +77,7 @@ function TagView(props: ITagViewProps) {
                 //         width: "max-content",
                 //     }}
                 // />
-                <TaskTag tag={props.tag} className={classNames({ [classes.deletedChip]: props.deleted })} />
+                <Tag tag={props.tag} className={classNames({ [classes.deletedChip]: props.deleted })} />
             )}
             {props.deleted ? (
                 <>
@@ -130,6 +130,7 @@ function TagView(props: ITagViewProps) {
     );
 }
 
+// todo: move entity CRUD logic to related container
 export default function TagManager(props: ITagManagerProps) {
     const { userData, updateUserData } = UserDataContainer.useContainer();
     const [tags, setTags] = useState<ITag[]>([]);

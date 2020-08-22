@@ -4,7 +4,7 @@ import TaskList from "./TaskList";
 import { Container } from "@material-ui/core";
 
 const RootTaskList: React.FC = () => {
-    const { tasks } = TasksContainer.useContainer();
+    const { entities: tasks } = TasksContainer.useContainer();
 
     return (
         <Container>

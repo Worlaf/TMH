@@ -1944,18 +1944,18 @@
   dependencies:
     typescript "^3.5.3"
 
-"@ts-nameof/transforms-babel@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@ts-nameof/transforms-babel/-/transforms-babel-4.2.0.tgz#3f72b6f033e50df1eac8796ecd0270576a2d564c"
-  integrity sha512-issLk1u6jYqHYpztJJ/1+qlTRlD4Zk7du1d9T4c/7xBZ11L3QWkredHEuBVWQW3tPoklxxw3bCn5oWbBydoVGQ==
+"@ts-nameof/transforms-babel@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@ts-nameof/transforms-babel/-/transforms-babel-4.2.1.tgz#3f804ad534fa945c6c48a9cfcd30f47961538595"
+  integrity sha512-4BG5+55JXI3bLzoEqHKPQm5t4JgK2Ae1chAD7w5jDdMI8j1mWqVeonMjNMNIm28dMYs41Qvep25/5hpg24JyOw==
   dependencies:
     "@ts-nameof/common" "^4.2.0"
-    "@ts-nameof/transforms-common" "^4.2.0"
+    "@ts-nameof/transforms-common" "^4.2.1"
 
-"@ts-nameof/transforms-common@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@ts-nameof/transforms-common/-/transforms-common-4.2.0.tgz#3f9bc331e2e4f09d1a25b73e6491770bc35dbd79"
-  integrity sha512-nSE7EdjWm2X4W41tyvirSH6kncBq3Qw05CfNyoksVt5s7SO/FUVAkg/gG7fI2j7/dAXImfHwGphIcP2sNtUuYA==
+"@ts-nameof/transforms-common@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@ts-nameof/transforms-common/-/transforms-common-4.2.1.tgz#a38c18ef62f921ffcea7b4a9a693cb63301e23d3"
+  integrity sha512-mg6nkkHqNlKU1B15pEtiikSKadJSOxFFWpi7tEVB7Yhjx0PhoTcSe7oxK0fXHZGeoTGF2SMZjmCsGnbtfcgk6w==
   dependencies:
     "@ts-nameof/common" "^4.2.0"
 
@@ -4160,6 +4160,11 @@ data-urls@^1.0.0, data-urls@^1.1.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
+
+date-fns@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.15.0.tgz#424de6b3778e4e69d3ff27046ec136af58ae5d5f"
+  integrity sha512-ZCPzAMJZn3rNUvvQIMlXhDr4A+Ar07eLeGsGREoWU19a3Pqf5oYa+ccd+B3F6XVtQY6HANMFdOQ8A+ipFnvJdQ==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
@@ -11070,12 +11075,12 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-ts-nameof.macro@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/ts-nameof.macro/-/ts-nameof.macro-4.2.1.tgz#5eed34af239dbd0acad97554a262dd886d085b62"
-  integrity sha512-ObA6TnHq+t/iL1caVly3Iswxd6fh2PGurrDRn0dwkEIAvPgu3A/gJqZ8JZel1pwjjq3rP653A9VkxfID5z9vgw==
+ts-nameof.macro@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/ts-nameof.macro/-/ts-nameof.macro-4.2.2.tgz#d73f1d20843448f6c12b2ad93863b2fed6f7b213"
+  integrity sha512-Rh3vDVQ3nVhEMoM3fRMTMBHi/mjc+Hlmt9uuUPVpK32ZE+Dj6+FBaRi267sosleKcONB6TcoC5ObbHnmjsedRg==
   dependencies:
-    "@ts-nameof/transforms-babel" "^4.2.0"
+    "@ts-nameof/transforms-babel" "^4.2.1"
 
 ts-pnp@1.1.6, ts-pnp@^1.1.6:
   version "1.1.6"

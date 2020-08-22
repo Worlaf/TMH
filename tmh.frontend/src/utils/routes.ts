@@ -22,7 +22,7 @@ class Route implements IRoute {
         var result = this.template;
 
         _.keys(params).forEach((key) => {
-            result = this.template.replace(`/:${key}/`, `/${params[key]}/`);
+            result = this.template.replace(new RegExp(`\/:${key}(\/|$)`), `/${params[key]}/`);
         });
 
         return result;
@@ -80,9 +80,12 @@ function getChildren(container: RouteNode<any>, deepFlatten: boolean) {
 }
 
 const routes = {
-    root: createRoute("/", "TMH", "root", {
-        tasks: createRoute("/tasks", "Задачи", "tasks", {
-            edit: createRoute("/tasks/:taskId/edit", "Редактирование", "edit", {}),
+    root: createRoute("/", "root", "TMH", {
+        tasks: createRoute("/tasks", "tasks", "Задачи", {
+            edit: createRoute("/tasks/:taskId/edit", "edit", "Редактирование", {}),
+        }),
+        schedule: createRoute("/schedule", "schedule", "Расписание", {
+            scheduleDay: createRoute("/schedule/:date", "scheduleDay", "Расписание", {}),
         }),
     }),
 };

@@ -4,10 +4,10 @@ import { Container, TextField, makeStyles } from "@material-ui/core";
 import TaskDifficultyEditor from "./TaskDifficultyEditor";
 import TaskPriorityEditor from "./TaskPriorityEditor";
 import TaskDurationEditor from "./TaskDurationEditor";
-import TaskDescriptionEditor from "./TaskDescriptionEditor";
-import PropertyEditorLayout from "./PropertyEditorLayout";
+import DescriptionEditor from "../commonPropertyEditors/DescriptionEditor";
+import PropertyEditorLayout from "../commonPropertyEditors/PropertyEditorLayout";
 import TaskList from "../taskList/TaskList";
-import TaskTagsEditor from "./TaskTagsEditor";
+import TagsEditor from "../commonPropertyEditors/TagsEditor";
 
 const useStyles = makeStyles((theme) => ({
     taskTitleInput: {
@@ -22,7 +22,7 @@ interface IEditTaskViewProps {
 }
 
 const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
-    const { tasks, updateTask } = TasksContainer.useContainer();
+    const { entities: tasks, update: updateTask } = TasksContainer.useContainer();
     const task = tasks.find((t) => t.id === props.taskId);
 
     const styles = useStyles();
@@ -34,13 +34,13 @@ const EditTaskView: React.FC<IEditTaskViewProps> = (props) => {
                 <TaskDifficultyEditor difficulty={task.difficulty} onChange={(value) => updateTask({ ...task, difficulty: value })} />
                 <TaskPriorityEditor priority={task.priority} onChange={(value) => updateTask({ ...task, priority: value })} />
                 <TaskDurationEditor duration={task.duration} onChange={(value) => updateTask({ ...task, duration: value })} />
-                <TaskTagsEditor tagIds={task.tagIds} onChange={(value) => updateTask({ ...task, tagIds: value })} />
+                <TagsEditor tagIds={task.tagIds} onChange={(value) => updateTask({ ...task, tagIds: value })} />
                 {task.parentId === null ? (
                     <PropertyEditorLayout label="Подзадачи">
                         <TaskList parentTaskId={task.id} tasks={tasks.filter((t) => t.parentId === task.id)} allowAdding={true} />
                     </PropertyEditorLayout>
                 ) : null}
-                <TaskDescriptionEditor description={task.description} onChange={(value) => updateTask({ ...task, description: value })} />
+                <DescriptionEditor description={task.description} onChange={(value) => updateTask({ ...task, description: value })} />
             </Container>
         );
     else throw Error(`Не удалось найти задачу с указанным идентификатором: '${props.taskId}'.`);

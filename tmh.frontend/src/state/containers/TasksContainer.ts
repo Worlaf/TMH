@@ -1,50 +1,40 @@
-import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ITask } from "../data/Task";
 import * as uuid from "uuid";
 import _ from "lodash";
-import UserDataContainer from "./UserDataContainer";
+import { IUserData } from "../data/UserData";
+import nameof from "ts-nameof.macro";
+import useEntity from "./useEntity";
 
 function useTasks() {
-    const { userData, updateUserData } = UserDataContainer.useContainer();
-    const [tasks, setTasks] = useState<ITask[]>(userData.tasks);
+    const taskRepository = useEntity<ITask>(
+        nameof<IUserData>((d) => d.tasks),
+        defaultTaskPropertiesProvider
+    );
 
-    useEffect(() => {
-        if (userData.tasks !== tasks) updateUserData({ tasks: tasks });
-    }, [tasks]);
-
-    const nextIndex = () => (_(tasks).maxBy((t) => t.index)?.index || 0) + 1;
-
-    const createTask = (task: Partial<ITask> & { title: string }) => {
-        const newTask: ITask = {
+    function defaultTaskPropertiesProvider(tasks: ITask[]) {
+        return {
             priority: 0,
             difficulty: null,
             duration: null,
             description: null,
-            index: nextIndex(),
+            index: nextIndex(tasks),
             complete: false,
             parentId: null,
+            title: "New Task",
             tagIds: [],
-            ...task,
             id: uuid.v4(),
-        };
+        } as ITask;
+    }
 
-        setTasks([...tasks, newTask]);
+    function nextIndex(tasks: ITask[]) {
+        return (_(tasks).maxBy((t) => t.index)?.index || 0) + 1;
+    }
 
-        return newTask;
+    return {
+        ...taskRepository,
+        nextIndex: () => nextIndex(taskRepository.entities),
     };
-
-    const updateTask = (task: ITask) => {
-        setTasks([...tasks.filter((t) => t.id !== task.id), task]);
-    };
-
-    const deleteTask = (id: string) => {
-        setTasks([...tasks.filter((t) => t.id !== id)]);
-    };
-
-    const getTask = (id: string) => tasks.find((t) => t.id === id);
-
-    return { tasks, createTask, updateTask, deleteTask, getTask, nextIndex };
 }
 
 const TasksContainer = createContainer(useTasks);

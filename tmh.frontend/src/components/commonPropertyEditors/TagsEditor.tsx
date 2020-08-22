@@ -4,12 +4,12 @@ import { makeStyles, Box, Button } from "@material-ui/core";
 import UserDataContainer from "../../state/containers/UserDataContainer";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import TagManager from "../tagManager/TagManager";
-import TaskTag from "../TaskTag";
+import Tag from "../Tag";
 import classNames from "classnames";
 import AddIcon from "@material-ui/icons/Add";
 import _ from "lodash";
 
-interface ITaskTagsEditorProps {
+interface ITagsEditorProps {
     tagIds: string[];
     onChange: (tagIds: string[]) => void;
 }
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function TaskTagsEditor(props: ITaskTagsEditorProps) {
+export default function TagsEditor(props: ITagsEditorProps) {
     const { userData } = UserDataContainer.useContainer();
     const [openTagManager, setOpenTagManager] = useState(false);
 
@@ -39,7 +39,7 @@ export default function TaskTagsEditor(props: ITaskTagsEditorProps) {
                         const tag = isTagSelected ? t : { ...t, backColor: "#f0f0f0", fontColor: "#aaaaaa" };
 
                         return (
-                            <TaskTag
+                            <Tag
                                 key={tag.id}
                                 tag={tag}
                                 className={classNames(classes.tag, { [classes.unselectedTag]: !isTagSelected })}

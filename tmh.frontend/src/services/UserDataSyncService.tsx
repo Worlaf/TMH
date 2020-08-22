@@ -12,6 +12,7 @@ import appConfig from "../utils/appConfig";
 function fixUserData(data: IUserData) {
     // data migration
     if (data.tags === null) data.tags = [];
+    if (data.activities === null) data.activities = [];
 
     data.tasks = data.tasks.map((t) => (t.tagIds !== null && t.tagIds !== undefined ? t : { ...t, tagIds: [] }));
 }

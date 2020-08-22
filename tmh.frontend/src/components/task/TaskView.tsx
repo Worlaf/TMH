@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ITask } from "../../state/data/Task";
 import { Container, makeStyles, IconButton, Box, InputBase, Divider, Paper } from "@material-ui/core";
 import TasksContainer from "../../state/containers/TasksContainer";
@@ -18,14 +18,16 @@ import classNames from "classnames";
 import markdownParser from "../../utils/markdownParser";
 import TaskList from "../taskList/TaskList";
 import SubtasksProgressView from "./SubtasksProgressView";
-import TaskTagsView from "./TaskTagsView";
+import Tags from "../Tags";
+import _ from "lodash";
 
 interface TaskViewProps {
     isExpanded: boolean;
-    taskId?: string;
+    task?: ITask;
     parentTaskId?: string;
-    onToggleExpandedState: () => void;
-    keyIn: string | number;
+    onToggleExpandedState?: () => void;
+    renderCustomIcon?: (task: ITask) => React.ReactNode;
+    allowDelete?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -83,11 +85,7 @@ const useStyles = makeStyles((theme) => ({
         width: "250px max-content",
         alignItems: "center",
     },
-    taskCollapsedDetailsContainer: {
-        height: "0",
-        display: "none",
-    },
-    taskExpandedDetailsContainer: {
+    taskDetailsContainer: {
         height: "auto",
     },
     taskDescription: {
@@ -96,100 +94,152 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// todo: add create task view; debounce task updates
 const TaskView: React.FC<TaskViewProps> = (props) => {
-    const { tasks, createTask, updateTask, deleteTask, getTask } = TasksContainer.useContainer();
-    const task = (props.taskId && getTask(props.taskId)) || ({ title: "", parentId: props.parentTaskId ?? null } as ITask);
-    const isNewTask = task.id === undefined;
-    const children = isNewTask ? undefined : tasks.filter((t) => t.parentId === task.id);
+    const classes = useStyles();
 
-    const saveTask = (title: string) => {
-        task.title = title;
+    return (
+        <Container className={classNames(classes.taskContainer, { [classes.completeTaskContainer]: props.task && props.task.complete })}>
+            {props.task !== undefined ? <TaskHeader renderCustomIcon={props.renderCustomIcon} task={props.task} allowDelete={props.allowDelete} /> : <NewTaskHeader />}
+            {props.task && <TaskSummary isExpanded={props.isExpanded} task={props.task} onToggleExpandedState={props.onToggleExpandedState} />}
+        </Container>
+    );
+};
 
-        if (task.id) updateTask(task);
-        else createTask(task);
-    };
+export default TaskView;
+
+function TaskSummary(props: { task: ITask; onToggleExpandedState?: () => void; isExpanded: boolean }) {
+    const { entities: tasks } = TasksContainer.useContainer();
+    const classes = useStyles();
+    const children = tasks.filter((t) => t.parentId === props.task.id);
+
+    return (
+        <>
+            <Box className={classes.taskTagsContainer}>
+                <Tags tagIds={props.task.tagIds} />
+            </Box>
+            <Box className={classes.taskPropsContainer}>
+                <Box className={classes.taskMainPropsContainer}>
+                    <PriorityView priority={props.task.priority} />
+                    {props.task.difficulty && <DifficultyView difficulty={props.task.difficulty} />}
+                    {props.task.duration && <DurationView duration={props.task.duration} />}
+                    {children && children.length > 0 ? <SubtasksProgressView children={children} /> : null}
+                </Box>
+                {props.onToggleExpandedState !== undefined && (props.task.description || (children && children.length > 0)) ? (
+                    <IconButton size="small" onClick={() => props.onToggleExpandedState!()}>
+                        {props.isExpanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                    </IconButton>
+                ) : null}
+            </Box>
+            {props.isExpanded && (
+                <Container className={classes.taskDetailsContainer}>
+                    {props.task.description && (
+                        <Paper className={classes.taskDescription} elevation={2}>
+                            <div dangerouslySetInnerHTML={{ __html: markdownParser.render(props.task.description) }}></div>
+                        </Paper>
+                    )}
+                    {children && children.length > 0 ? <TaskList readOnly parentTaskId={props.task.id} tasks={children} allowCompletion /> : null}
+                </Container>
+            )}
+        </>
+    );
+}
+
+function TaskHeader(props: { task: ITask; renderCustomIcon?: (task: ITask) => React.ReactNode; allowDelete?: boolean }) {
+    const classes = useStyles();
+    const taskRepository = TasksContainer.useContainer();
+    const [title, setTitle] = useState<string>(props.task.title);
+
+    const debouncedUpdateTitle = useCallback(
+        _.debounce((title: string) => {
+            taskRepository.save({ ...props.task, title: title });
+        }, 200),
+        [taskRepository]
+    );
+
+    useEffect(() => {
+        if (title !== props.task.title) {
+            debouncedUpdateTitle(title);
+        }
+    }, [title]);
 
     const resolveIcon = () => {
-        if (!task.id) {
+        if (props.renderCustomIcon) return props.renderCustomIcon(props.task);
+        else if (props.task.complete) {
             return (
-                <IconButton size="small" disabled>
-                    <AddIcon />
-                </IconButton>
-            );
-        } else if (task.complete) {
-            return (
-                <IconButton size="small" onClick={() => updateTask({ ...task, complete: false })}>
+                <IconButton size="small" onClick={() => taskRepository.save({ ...props.task, complete: false })}>
                     <CheckBoxIcon />
                 </IconButton>
             );
         } else {
             return (
-                <IconButton size="small" onClick={() => updateTask({ ...task, complete: true })}>
+                <IconButton size="small" onClick={() => taskRepository.save({ ...props.task, complete: true })}>
                     <CheckBoxOutlineBlankIcon />
                 </IconButton>
             );
         }
     };
 
+    return (
+        <Box className={classes.taskSummaryContainer}>
+            {resolveIcon()}
+            <TaskTitle title={title} isTaskComplete={props.task.complete} onChange={setTitle} onEnterKeyPress={() => debouncedUpdateTitle(title)} />
+            {props.task !== undefined && (
+                <>
+                    <Link to={routes.root.tasks.edit.build({ taskId: props.task.id })}>
+                        <IconButton size="small">
+                            <EditIcon />
+                        </IconButton>
+                    </Link>
+                    {props.allowDelete && (
+                        <>
+                            <Divider orientation="vertical" className={classes.taskSummaryDivider} />
+                            <IconButton size="small" onClick={() => taskRepository.remove(props.task.id)}>
+                                <ClearIcon />
+                            </IconButton>
+                        </>
+                    )}
+                </>
+            )}
+        </Box>
+    );
+}
+
+function NewTaskHeader() {
+    const classes = useStyles();
+    const taskRepository = TasksContainer.useContainer();
+    const [title, setTitle] = useState<string>("");
+
+    const createTask = () => {
+        taskRepository.create({ title: title });
+    };
+
+    return (
+        <Box className={classes.taskSummaryContainer}>
+            <IconButton size="small" onClick={createTask}>
+                <AddIcon />
+            </IconButton>
+            <TaskTitle title={title} textInputPlaceholder={"Новая задача"} onEnterKeyPress={createTask} onChange={(title) => setTitle(title)} isTaskComplete={false} />
+        </Box>
+    );
+}
+
+function TaskTitle(props: { title: string; textInputPlaceholder?: string; isTaskComplete: boolean; onChange?: (title: string) => void; onEnterKeyPress?: () => void }) {
     const classes = useStyles();
 
     return (
-        <Container className={classNames(classes.taskContainer, { [classes.completeTaskContainer]: task.complete })}>
-            <Box className={classes.taskSummaryContainer}>
-                {resolveIcon()}
-                <InputBase
-                    className={classNames(classes.taskTitleInput, { [classes.completeTaskTitleInput]: task.complete })}
-                    placeholder={isNewTask ? "Новая задача" : undefined}
-                    value={task.title}
-                    onChange={(event) => {
-                        saveTask(event.target.value);
-                    }}
-                />
-                {!isNewTask && (
-                    <>
-                        <Link to={routes.root.tasks.edit.build({ taskId: task.id })}>
-                            <IconButton size="small">
-                                <EditIcon />
-                            </IconButton>
-                        </Link>
-                        <Divider orientation="vertical" className={classes.taskSummaryDivider} />
-                        <IconButton size="small" onClick={() => deleteTask(task.id)}>
-                            <ClearIcon />
-                        </IconButton>
-                    </>
-                )}
-            </Box>
-
-            {!isNewTask && (
-                <Box className={classes.taskTagsContainer}>
-                    <TaskTagsView tagIds={task.tagIds} />
-                </Box>
-            )}
-            {!isNewTask && (
-                <Box className={classes.taskPropsContainer}>
-                    <Box className={classes.taskMainPropsContainer}>
-                        <PriorityView priority={task.priority} />
-                        {task.difficulty && <DifficultyView difficulty={task.difficulty} />}
-                        {task.duration && <DurationView duration={task.duration} />}
-                        {children && children.length > 0 ? <SubtasksProgressView children={children} /> : null}
-                    </Box>
-                    {task.description || (children && children.length > 0) ? (
-                        <IconButton size="small" onClick={() => props.onToggleExpandedState()}>
-                            {props.isExpanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                        </IconButton>
-                    ) : null}
-                </Box>
-            )}
-            <Container className={classNames({ [classes.taskExpandedDetailsContainer]: props.isExpanded }, { [classes.taskCollapsedDetailsContainer]: !props.isExpanded })}>
-                {task.description && (
-                    <Paper className={classes.taskDescription} elevation={2}>
-                        <div dangerouslySetInnerHTML={{ __html: markdownParser.render(task.description) }}></div>
-                    </Paper>
-                )}
-                {children && children.length > 0 ? <TaskList readOnly parentTaskId={task!.id} tasks={children} allowCompletion /> : null}
-            </Container>
-        </Container>
+        <InputBase
+            className={classNames(classes.taskTitleInput, { [classes.completeTaskTitleInput]: props.isTaskComplete })}
+            placeholder={props.textInputPlaceholder}
+            value={props.title}
+            onChange={(event) => {
+                if (props.onChange) props.onChange(event.target.value);
+            }}
+            onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                    if (props.onEnterKeyPress) props.onEnterKeyPress();
+                }
+            }}
+        />
     );
-};
-
-export default TaskView;
+}

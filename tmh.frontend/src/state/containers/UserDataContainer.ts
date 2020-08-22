@@ -3,7 +3,7 @@ import { IUserData } from "../data/UserData";
 import { createContainer } from "unstated-next";
 
 function useUserData() {
-    const [userData, setUserData] = useState<IUserData>({ tasks: [], tags: [] });
+    const [userData, setUserData] = useState<IUserData>({ tasks: [], tags: [], activities: [] });
 
     const updateUserData = (data: Partial<IUserData>) => setUserData({ ...userData, ...data });
 

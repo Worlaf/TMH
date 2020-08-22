@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropertyEditorLayout from "./PropertyEditorLayout";
+import PropertyEditorLayout from "../commonPropertyEditors/PropertyEditorLayout";
 import { InputAdornment, IconButton, makeStyles, Box, OutlinedInput } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";

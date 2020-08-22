@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditTaskPage() {
     const routeParams = useParams<{ taskId: string }>();
-    const task = TasksContainer.useContainer().getTask(routeParams.taskId);
+    const task = TasksContainer.useContainer().get(routeParams.taskId);
 
     if (!task) throw Error(`Не удалось получить задачу по идентификатору ${routeParams.taskId}`);
 

@@ -4,6 +4,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { Box, IconButton, Typography, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { ITask } from "../../state/data/Task";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -17,23 +18,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleReadonlyTaskView(props: { taskId: string; allowCompletion?: boolean; keyIn: string | number }) {
-    const { getTask, updateTask } = TasksContainer.useContainer();
-    const task = getTask(props.taskId);
-
-    if (!task) throw Error(`Не удалось получить задачу по идентификатору ${props.taskId}`);
+export default function SimpleReadonlyTaskView(props: { task: ITask; allowCompletion?: boolean; keyIn: string | number }) {
+    const { update: updateTask } = TasksContainer.useContainer();
 
     const styles = useStyles();
 
     return (
         <Box className={styles.container}>
             {props.allowCompletion && (
-                <IconButton size="small" onClick={() => updateTask({ ...task, complete: !task.complete })}>
-                    {task.complete ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+                <IconButton size="small" onClick={() => updateTask({ ...props.task, complete: !props.task.complete })}>
+                    {props.task.complete ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
                 </IconButton>
             )}
             <Box>
-                <Typography className={classNames({ [styles.completeTaskTitle]: task.complete })}>{task.title}</Typography>
+                <Typography className={classNames({ [styles.completeTaskTitle]: props.task.complete })}>{props.task.title}</Typography>
             </Box>
         </Box>
     );

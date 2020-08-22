@@ -1,9 +1,9 @@
 import { colors } from "@material-ui/core";
+import { IEntity } from "./Entity";
 
 export type Priority = -2 | -1 | 0 | 1 | 2;
 
-export interface ITask {
-    id: string;
+export interface ITask extends IEntity {
     title: string;
     duration: number | null;
     difficulty: number | null;

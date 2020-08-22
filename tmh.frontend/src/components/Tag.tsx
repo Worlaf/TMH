@@ -2,7 +2,7 @@ import React from "react";
 import { ITag } from "../state/data/Tag";
 import { Chip, ChipProps } from "@material-ui/core";
 
-export default function TaskTag(props: { tag: ITag; className?: string; onClick?: () => void } & ChipProps) {
+export default function Tag(props: { tag: ITag; className?: string; onClick?: () => void } & ChipProps) {
     return (
         <Chip
             label={props.tag.label}
