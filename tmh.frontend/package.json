@@ -26,7 +26,7 @@
     "babel-plugin-macros": "^2.8.0",
     "classnames": "^2.2.6",
     "firebase": "^7.17.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "markdown-it": "^11.0.0",
     "material-ui-color": "^0.4.5",
     "prop-types": "^15.7.2",
