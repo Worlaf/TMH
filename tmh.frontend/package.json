@@ -27,7 +27,7 @@
     "classnames": "^2.2.6",
     "firebase": "^7.17.1",
     "lodash": "^4.17.19",
-    "markdown-it": "^11.0.0",
+    "markdown-it": "^12.3.2",
     "material-ui-color": "^0.4.5",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
